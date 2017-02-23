@@ -1,0 +1,29 @@
+---
+# playbook to upgrade lxd container via lxc
+#
+# usage:
+# ansible-playbook -i lxd.py lxd-update-lxc.yml
+#
+#
+#
+- hosts: containers
+  gather_facts: false
+  user: root
+
+  tasks:
+  - name: Make a snapshot
+    command: lxc snapshot {{ inventory_hostname }} secupdate
+    delegate_to: 127.0.0.1
+
+  - name: Update repo cache
+    command: lxc exec {{ inventory_hostname }} -- apt-get update
+    delegate_to: 127.0.0.1
+
+  - name: Upgrade packages
+    command: lxc exec {{ inventory_hostname }} -- apt-get -y upgrade -qq
+    delegate_to: 127.0.0.1
+
+  - name: Delete snapshot
+    command: lxc delete {{ inventory_hostname }}/secupdate
+    delegate_to: 127.0.0.1
+

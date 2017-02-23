@@ -1,0 +1,31 @@
+---
+# playbook to upgrade lxd container via ssh
+# requires ssh key inside container
+#
+# usage:
+# ansible-playbook -i lxd.py lxd-update-ssh.yml
+#
+#
+#
+- hosts: nodes
+  gather_facts: false
+  user: root
+
+  tasks:
+  - name: Update repo cache
+    apt: update_cache=yes
+
+  - name: install package aptitude
+    apt: name=aptitude state=present
+
+  - name: install package update-notifier-common
+    apt: name=update-notifier-common state=present
+
+  - name: Check if there are packages available to be installed/upgraded
+    command: /usr/lib/update-notifier/apt-check --package-names
+    register: packages
+
+  - name: Upgrade all packages to the latest version
+    apt: update_cache=yes upgrade=full
+    when: packages.stderr != ""
+
