@@ -1,5 +1,4 @@
-Welcome to FAUP - Fully Automatic Update Processor
-==================================================
+# Welcome to FAUP - Fully Automatic Update Processor
 
 As part on an internal workflow to upgrade Ubuntu VMs in an OpenStack 
 environment here are some ansible playbooks to do this:
@@ -7,10 +6,10 @@ environment here are some ansible playbooks to do this:
 Preconditions for OpenStack usage:
 
 * OpenStack API access
-* apt-get install ansible python-shade  # look at notes in glance.yml
+* apt-get install ansible python-shade
 
 
-1. Update VMs (dynamic inventor is using the *internal* ip-address!)
+## Update VMs (dynamic inventor is using the *internal* ip-address!)
 
 ```
     . ops.openrc
@@ -25,14 +24,14 @@ for some mission critical VMs might this command useful:
     ansible-playbook -i openstack.py update.yml --limit dbserver
 ```
 
-2. Update LXD container (via ssh, needs ssh key deployed)
+## Update LXD container (via ssh, needs ssh key deployed)
 
 ```
     ansible-playbook -i lxd.py lxd-update-ssh.yml
 
 ```
 
-3. Update LXD container (via lxc, make snapshots before)
+## Update LXD container (via lxc, make snapshots before)
 
 ```
     ansible-playbook -i lxd.py lxd-update-lxc.yml
