@@ -20,7 +20,7 @@
     delegate_to: 127.0.0.1
 
   - name: Upgrade packages
-    command: lxc exec {{ inventory_hostname }} -- apt-get -y upgrade -qq
+    command: lxc exec {{ inventory_hostname }} --env DEBIAN_FRONTEND=noninteractive -- apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
     delegate_to: 127.0.0.1
 
   - name: Delete snapshot
