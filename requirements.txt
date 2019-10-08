@@ -18,4 +18,4 @@ python-openstackclient==3.4.1
 python-swiftclient==3.2.0
 python-troveclient==2.6.0
 shade==1.13.1
-pyOpenSSL==16.2.0
+pyOpenSSL==17.5.0
