@@ -1,29 +1,29 @@
----
-# playbook to upgrade lxd container via lxc
-#
-# usage:
-# ansible-playbook -i lxd.py lxd-update-lxc.yml
-#
-#
-#
 - hosts: containers
   gather_facts: false
-  user: root
+  become: false
+  vars:
+    snapshot_name: secupdate
 
   tasks:
-  - name: Make a snapshot
-    command: lxc snapshot {{ inventory_hostname }} secupdate
-    delegate_to: 127.0.0.1
+    - name: Snapshot erstellen
+      command: >
+        lxc snapshot {{ inventory_hostname }} {{ snapshot_name }}
+      delegate_to: localhost
 
-  - name: Update repo cache
-    command: lxc exec {{ inventory_hostname }} -- apt-get update
-    delegate_to: 127.0.0.1
+    - name: Paketquellen aktualisieren
+      command: >
+        lxc exec {{ inventory_hostname }} -- apt-get update
+      delegate_to: localhost
 
-  - name: Upgrade packages
-    command: lxc exec {{ inventory_hostname }} --env DEBIAN_FRONTEND=noninteractive -- apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
-    delegate_to: 127.0.0.1
+    - name: Pakete upgraden
+      command: >
+        lxc exec {{ inventory_hostname }} --
+        env DEBIAN_FRONTEND=noninteractive
+        apt-get -y -o Dpkg::Options::="--force-confdef"
+        -o Dpkg::Options::="--force-confold" upgrade
+      delegate_to: localhost
 
-  - name: Delete snapshot
-    command: lxc delete {{ inventory_hostname }}/secupdate
-    delegate_to: 127.0.0.1
-
+    - name: Snapshot löschen
+      command: >
+        lxc delete {{ inventory_hostname }}/{{ snapshot_name }}
+      delegate_to: localhost
