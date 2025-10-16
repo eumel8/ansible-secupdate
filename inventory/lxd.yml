@@ -1,0 +1,8 @@
+# https://docs.ansible.com/ansible/latest/collections/community/general/lxd_inventory.html
+plugin: community.general.lxd
+url: unix:///var/snap/lxd/common/lxd/unix.socket
+state: RUNNING
+groupby:
+  containers:
+    type: type
+    attribute: container
